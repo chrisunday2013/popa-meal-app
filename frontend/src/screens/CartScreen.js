@@ -28,12 +28,13 @@ export default function CartScreen(props) {
   };
   return (
     <div className="row top">
+     
       <div className="col-2">
         <h1>Shopping Cart</h1>
         {error && <MessageBox variant="danger">{error}</MessageBox>}
         {cartItems.length === 0 ? (
           <MessageBox>
-            Cart is empty. <Link to="/">Go Shopping</Link>
+            Cart is empty. <Link to="/home">Go Shopping</Link>
           </MessageBox>
         ) : (
           <ul>
@@ -66,7 +67,7 @@ export default function CartScreen(props) {
                       ))}
                     </select>
                   </div>
-                  <div>${item.price}</div>
+                  <div>N{item.price}</div>
                   <div>
                     <button
                       type="button"
@@ -81,12 +82,14 @@ export default function CartScreen(props) {
           </ul>
         )}
       </div>
+      
       <div className="col-1">
         <div className="card card-body">
+        <Link to="/home">Go Back for more </Link>
           <ul>
             <li>
               <h2>
-                Subtotal ({cartItems.reduce((a, c) => a + c.qty, 0)} items) : $
+                Subtotal ({cartItems.reduce((a, c) => a + c.qty, 0)} items) : N
                 {cartItems.reduce((a, c) => a + c.price * c.qty, 0)}
               </h2>
             </li>

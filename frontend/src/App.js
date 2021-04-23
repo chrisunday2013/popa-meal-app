@@ -27,7 +27,9 @@ import SearchScreen from './screens/SearchScreen';
 import { listProductCategories } from './actions/productActions';
 import LoadingBox from './components/LoadingBox';
 import MessageBox from './components/MessageBox';
-import MapScreen from './screens/MapScreen';
+import FrontScreen from './screens/frontScreen';
+import ContactScreen from './screens/contactScreen';
+// import MapScreen from './screens/MapScreen';
 
 function App() {
   const cart = useSelector((state) => state.cart);
@@ -61,8 +63,8 @@ function App() {
             >
               <i className="fa fa-bars"></i>
             </button>
-            <Link className="brand" to="/">
-              amazona
+            <Link className="brand" to="/home">
+              pop a meal
             </Link>
           </div>
           <div>
@@ -185,6 +187,7 @@ function App() {
           <Route path="/placeorder" component={PlaceOrderScreen}></Route>
           <Route path="/order/:id" component={OrderScreen}></Route>
           <Route path="/orderhistory" component={OrderHistoryScreen}></Route>
+          <Route path="/contact" component={ContactScreen}></Route>
           <Route
             path="/search/name/:name?"
             component={SearchScreen}
@@ -209,7 +212,7 @@ function App() {
             path="/profile"
             component={ProfileScreen}
           ></PrivateRoute>
-          <PrivateRoute path="/map" component={MapScreen}></PrivateRoute>
+          {/* <PrivateRoute path="/map" component={MapScreen}></PrivateRoute> */}
           <AdminRoute
             path="/productlist"
             component={ProductListScreen}
@@ -239,7 +242,8 @@ function App() {
             component={OrderListScreen}
           ></SellerRoute>
 
-          <Route path="/" component={HomeScreen} exact></Route>
+          <Route path="/home" component={HomeScreen} ></Route>
+          <Route path="/" component={FrontScreen} exact></Route>
         </main>
         <footer className="row center">All right reserved</footer>
       </div>

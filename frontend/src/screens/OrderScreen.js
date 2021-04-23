@@ -1,11 +1,12 @@
 import Axios from 'axios';
-import { PayPalButton } from 'react-paypal-button-v2';
+// import { PayPalButton } from 'react-paypal-button-v2';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deliverOrder, detailsOrder, payOrder } from '../actions/orderActions';
 import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
+import { FlutterWaveButton, closePaymentModal } from 'flutterwave-react-v3';
 import {
   ORDER_DELIVER_RESET,
   ORDER_PAY_RESET,
@@ -34,10 +35,10 @@ export default function OrderScreen(props) {
   const dispatch = useDispatch();
   useEffect(() => {
     const addPayPalScript = async () => {
-      const { data } = await Axios.get('/api/config/paypal');
+      const { data } = await Axios.get('/api/config/flutterwave');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `https://www.paypal.com/sdk/js?client-id=${data}`;
+      script.src = `https://dashboard.flutterwave.com/settings/apis=${data}`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
@@ -55,7 +56,7 @@ export default function OrderScreen(props) {
       dispatch(detailsOrder(orderId));
     } else {
       if (!order.isPaid) {
-        if (!window.paypal) {
+        if (!window.flutterwave) {
           addPayPalScript();
         } else {
           setSdkReady(true);
@@ -71,6 +72,7 @@ export default function OrderScreen(props) {
     dispatch(deliverOrder(order._id));
   };
 
+
   return loading ? (
     <LoadingBox></LoadingBox>
   ) : error ? (
@@ -83,13 +85,12 @@ export default function OrderScreen(props) {
           <ul>
             <li>
               <div className="card card-body">
-                <h2>Shippring</h2>
+                <h2>Delivery</h2>
                 <p>
                   <strong>Name:</strong> {order.shippingAddress.fullName} <br />
                   <strong>Address: </strong> {order.shippingAddress.address},
-                  {order.shippingAddress.city},{' '}
-                  {order.shippingAddress.postalCode},
-                  {order.shippingAddress.country}
+                  {order.shippingAddress.phone},{' '}
+      
                 </p>
                 {order.isDelivered ? (
                   <MessageBox variant="success">
@@ -121,7 +122,7 @@ export default function OrderScreen(props) {
                 <ul>
                   {order.orderItems.map((item) => (
                     <li key={item.product}>
-                      <div className="row">
+                      <div className="row5">
                         <div>
                           <img
                             src={item.image}
@@ -136,7 +137,7 @@ export default function OrderScreen(props) {
                         </div>
 
                         <div>
-                          {item.qty} x ${item.price} = ${item.qty * item.price}
+                          {item.qty} x N{item.price} = N{item.qty * item.price}
                         </div>
                       </div>
                     </li>
@@ -155,19 +156,18 @@ export default function OrderScreen(props) {
               <li>
                 <div className="row">
                   <div>Items</div>
-                  <div>${order.itemsPrice.toFixed(2)}</div>
+                  <div>N{order.itemsPrice.toFixed(2)}</div>
                 </div>
               </li>
               <li>
                 <div className="row">
-                  <div>Shipping</div>
-                  <div>${order.shippingPrice.toFixed(2)}</div>
+                  <div>Delivery</div>
+                  <div>Free</div>
                 </div>
               </li>
               <li>
                 <div className="row">
-                  <div>Tax</div>
-                  <div>${order.taxPrice.toFixed(2)}</div>
+            
                 </div>
               </li>
               <li>
@@ -176,7 +176,7 @@ export default function OrderScreen(props) {
                     <strong> Order Total</strong>
                   </div>
                   <div>
-                    <strong>${order.totalPrice.toFixed(2)}</strong>
+                    <strong>N{order.totalPrice}</strong>
                   </div>
                 </div>
               </li>
@@ -191,10 +191,10 @@ export default function OrderScreen(props) {
                       )}
                       {loadingPay && <LoadingBox></LoadingBox>}
 
-                      <PayPalButton
-                        amount={order.totalPrice}
-                        onSuccess={successPaymentHandler}
-                      ></PayPalButton>
+                       
+                        <FlutterWaveButton  amount={order.totalPrice}
+                        onSuccess={successPaymentHandler}  className="primary block"/>
+                    
                     </>
                   )}
                 </li>
