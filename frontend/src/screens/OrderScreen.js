@@ -38,7 +38,7 @@ export default function OrderScreen(props) {
       const { data } = await Axios.get('/api/config/flutterwave');
       const script = document.createElement('script');
       script.type = 'text/javascript';
-      script.src = `https://dashboard.flutterwave.com/settings/apis=${data}`;
+      script.src = `https://dashboard.flutterwave.com/sdk/js?client-id=${data}`;
       script.async = true;
       script.onload = () => {
         setSdkReady(true);
